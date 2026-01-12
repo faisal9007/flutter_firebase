@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class VotingPage extends StatelessWidget {
@@ -5,32 +6,58 @@ class VotingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 16,
-        childAspectRatio: .6,
-      ),
-      itemCount: 2,
-      itemBuilder: (context, index) {
-        return Card(
-          child: Column(
-            children: [
-              Image.network(
-                'https://img.freepik.com/free-psd/close-up-delicious-apple_23-2151868338.jpg',
-              ),
-              Text(
-                'Name',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                'Vote: 10',
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-              ),
-              ElevatedButton(onPressed: () {}, child: Text('Vote')),
-            ],
+    VoteParticipant(String id) {
+      FirebaseFirestore.instance.collection('bdvote').doc(id).update({
+        'votes': FieldValue.increment(1),
+      });
+    }
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('bdvote').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+
+        final bdvote = snapshot.data?.docs ?? [];
+        return GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 10,
+            childAspectRatio: 0.80,
           ),
+          itemCount: 2,
+          itemBuilder: (context, index) {
+            final doc = bdvote[index];
+            final data = doc.data() as Map<String, dynamic>;
+            return Card(
+              child: Column(
+                children: [
+                  Image.network(data['imageUrl']),
+                  Text(
+                    data['name'],
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'Vote: ${data['votes']}',
+                    style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () => VoteParticipant(doc.id),
+                      child: Text('Vote'),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );
