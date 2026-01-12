@@ -25,7 +25,7 @@ class VotingPage extends StatelessWidget {
             crossAxisCount: 2,
             mainAxisSpacing: 16,
             crossAxisSpacing: 10,
-            childAspectRatio: 0.80,
+            childAspectRatio: 0.60,
           ),
           itemCount: 2,
           itemBuilder: (context, index) {
@@ -34,7 +34,7 @@ class VotingPage extends StatelessWidget {
             return Card(
               child: Column(
                 children: [
-                  Image.network(data['imageUrl']),
+                  Image.network(data['imageUrl'], fit: BoxFit.cover),
                   Text(
                     data['name'],
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
