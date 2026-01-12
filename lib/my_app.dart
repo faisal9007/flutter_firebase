@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase/task_manager.dart';
 import 'package:flutter_firebase/voting_page.dart';
 
 class MyApp extends StatelessWidget {
@@ -9,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'BD Voting App',
-      home: VotingPage(),
+      home: TaskManager(),
     );
   }
 }
