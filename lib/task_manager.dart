@@ -54,17 +54,24 @@ class TaskManager extends StatelessWidget {
       centerTitle: true,
       backgroundColor: Colors.orange,
     ),
-    body: ListView.builder(
-      itemCount: 10,
-        itemBuilder: (context,index){
-        return ListTile(
-          title: Text('This is title'),
-          leading: Checkbox(value: false, onChanged: (val){}),
-          subtitle: Text('here is description'),
-          trailing: Icon(Icons.edit),
-        );
-
-        }),
+    body: StreamBuilder<QuerySnapshot>(
+      stream: tasks.snapshots(),
+      builder: (context, asyncSnapshot) {
+        final docs = asyncSnapshot.data!.docs;
+        return ListView.builder(
+          itemCount: docs.length,
+            itemBuilder: (context,index){
+            final doc = docs[index];
+            return ListTile(
+              title: Text(doc['title']),
+              leading: Checkbox(value: false, onChanged: (val){}),
+              subtitle: Text(doc['description']),
+              trailing: Icon(Icons.edit),
+            );
+        
+            });
+      }
+    ),
     floatingActionButton: FloatingActionButton(
       onPressed: (){
         showTaskDialog( context);
