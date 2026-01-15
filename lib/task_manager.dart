@@ -7,10 +7,11 @@ class TaskManager extends StatelessWidget {
    TextEditingController titleController = TextEditingController();
    TextEditingController descriptionController = TextEditingController();
   Future<void>addTask()async {
-      tasks.add(
-        {'title:${titleController.text}',
-          'description :${descriptionController.text}',
-          'completed : false',}
+      await tasks.add(
+        {'title':titleController.text,
+          'description':descriptionController.text,
+          'completed' : false,
+        }
       );
   }
 
@@ -38,7 +39,10 @@ class TaskManager extends StatelessWidget {
         TextButton(onPressed: (){
           Navigator.pop(context);
         }, child: Text('Cancel')),
-        ElevatedButton(onPressed: (){}, child: Text('Add'))
+        ElevatedButton(onPressed: (){
+          addTask();
+          Navigator.pop(context);
+        }, child: Text('Add'))
       ],
     ));
   }
