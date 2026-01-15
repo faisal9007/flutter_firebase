@@ -1,10 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class TaskManager extends StatelessWidget {
-  const TaskManager({super.key});
+   TaskManager({super.key});
+  final CollectionReference tasks = FirebaseFirestore.instance.collection('tasks');
+   TextEditingController titleController = TextEditingController();
+   TextEditingController descriptionController = TextEditingController();
+  Future<void>addTask()async {
+      tasks.add(
+        {'title:${titleController.text}',
+          'description :${descriptionController.text}',
+          'completed : false',}
+      );
+  }
+
   void showTaskDialog(BuildContext context){
-    TextEditingController titleController = TextEditingController();
-    TextEditingController descriptionController = TextEditingController();
+
     showDialog(context: context, builder: (_)=> AlertDialog(
       content: Column(
         mainAxisSize: MainAxisSize.min,
